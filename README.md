@@ -15,3 +15,8 @@ Clone the project to your local machine:
 
 ```bash
 git clone https://github.com/birol-coskun/doto.git
+
+Navigate to the project directory:
+
+cd doto
+
