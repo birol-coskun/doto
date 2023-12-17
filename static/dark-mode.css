@@ -1,0 +1,57 @@
+/* dark-mode.css */
+
+body.dark-mode {
+    background-color: #333; /* Gece modu arkaplan rengi */
+    color: #fff; /* Gece modu metin rengi */
+}
+
+h1.dark-mode {
+    color: #61dafb; /* Gece modu başlık rengi */
+}
+
+form.dark-mode {
+    text-align: center; /* Form alanlarını ortala */
+}
+
+form.dark-mode label {
+    display: block;
+    margin-bottom: 8px;
+    color: #fff; /* Gece modu etiket rengi */
+}
+
+form.dark-mode input[type="text"] {
+    padding: 8px;
+    width: 60%;
+    color: #000; /* Gece modu giriş metin rengi */
+    background-color: #fff; /* Gece modu giriş arkaplan rengi */
+}
+
+form.dark-mode button {
+    padding: 8px;
+    cursor: pointer;
+    border: none;
+    color: #fff;
+    background-color: #3498db; /* Mavi buton rengi */
+    border-radius: 3px;
+}
+
+table.task-table.dark-mode {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    text-align: center; /* Tabloyu ortala */
+    color: #fff; /* Tablo içeriğinin rengi */
+}
+
+th.task-table.dark-mode,
+td.task-table.dark-mode {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    color: #fff; /* Tablo içeriğinin rengi */
+}
+
+th.task-table.dark-mode {
+    background-color: #1976D2; /* Lacivert tablo başlığı */
+    color: #fff; /* Beyaz tablo başlığı metin rengi */
+}

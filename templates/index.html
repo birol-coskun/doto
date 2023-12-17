@@ -4,49 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DOTO</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dark-mode.css') }}" id="dark-mode-stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+        /* Toggle Dark Mode Button */
+        button#toggle-dark-mode {
+            padding: 8px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-        table {
+
+        button#toggle-dark-mode:hover {
+            background-color: #2074a0;
+        }
+
+        /* Task List Table */
+        table.task-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            text-align: center;
         }
+
         th, td {
-            border: 1px solid #dddddd;
+            border: 1px solid #ddd;
             text-align: left;
-            padding: 8px;
+            padding: 12px;
+            color: #000;
         }
+
         th {
             background-color: #f2f2f2;
         }
-        form {
-            margin-top: 20px;
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
         }
-        .completed {
-            background-color: #c7ffcf; /* Yeşil arka plan rengi */
-        }
-        .uncompleted {
-            background-color: #ffc7c7; /* Kırmızı arka plan rengi */
-        }
-        .button {
+
+        .actions .button {
             padding: 8px;
+            margin-right: 5px;
             cursor: pointer;
+            border: none;
+            border-radius: 3px;
+            text-decoration: none !important;
+            color: #fff;
         }
-        .complete-button {
-            background-color: #4caf50; /* Yeşil buton rengi */
-            color: white;
+
+        .actions .edit-button {
+            background-color: #3498db;
         }
-        .uncomplete-button {
-            background-color: #f44336; /* Kırmızı buton rengi */
-            color: white;
+
+        .actions .delete-button {
+            background-color: #e74c3c;
+        }
+
+        .actions .complete-button {
+            background-color: #4caf50;
+        }
+
+        .actions .uncomplete-button {
+            background-color: #f44336;
+        }
+
+        .actions .button.completed {
+            text-decoration: none !important;
+        }
+
+        .actions a {
+            text-decoration: none;
+            color: #3498db;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .actions a:hover {
+            color: #2074a0;
         }
     </style>
+    <script>
+        function toggleDarkMode() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+        }
+    </script>
 </head>
 <body>
-    <h1>DOTO</h1>
+    <!-- Logo -->
+    <div class="logo-container">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+    </div>
+
+    <!-- Dark Mode Toggle Button -->
+    <button id="toggle-dark-mode" onclick="toggleDarkMode()">Toggle Dark Mode</button>
 
     <!-- Form for Adding Task -->
     <form action="{{ url_for('add') }}" method="POST">
@@ -56,31 +112,35 @@
     </form>
 
     <!-- Task List Table -->
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Content</th>
-            <th>Date Created</th>
-            <th>Last Updated</th>
-            <th>Actions</th>
-        </tr>
-        {% for task in tasks %}
-        <tr {% if task.completed %}class="completed"{% else %}class="uncompleted"{% endif %}>
-            <td>{{ task.id }}</td>
-            <td>{{ task.content }}</td>
-            <td>{{ task.date_local.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-            <td>{{ task.last_updated_local.strftime('%Y-%m-%d %H:%M:%S') if task.last_updated_local else '' }}</td>
-            <td>
-                {% if not task.completed %}
-                <a href="{{ url_for('edit', task_id=task.id) }}" class="button">Edit</a>
-                {% endif %}
-                <a href="{{ url_for('delete', task_id=task.id) }}" class="button">Delete</a>
-                <a href="{{ url_for('complete', task_id=task.id) }}" class="button {% if task.completed %}uncomplete-button{% else %}complete-button{% endif %}">
-                    {% if task.completed %}Uncomplete{% else %}Complete{% endif %}
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
+    <table class="task-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Content</th>
+                <th>Date Created</th>
+                <th>Last Updated</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr {% if task.completed %}class="completed"{% else %}class="uncompleted"{% endif %}>
+                <td>{{ task.id }}</td>
+                <td>{{ task.content }}</td>
+                <td>{{ task.date_local.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ task.last_updated_local.strftime('%Y-%m-%d %H:%M:%S') if task.last_updated_local else '' }}</td>
+                <td class="actions">
+                    {% if not task.completed %}
+                    <button class="button edit-button" onclick="window.location.href='{{ url_for('edit', task_id=task.id) }}'">Edit</button>
+                    {% endif %}
+                    <button class="button delete-button" onclick="window.location.href='{{ url_for('delete', task_id=task.id) }}'">Delete</button>
+                    <button class="button {% if task.completed %}uncomplete-button{% else %}complete-button{% endif %}" onclick="window.location.href='{{ url_for('complete', task_id=task.id) }}'">
+                        {% if task.completed %}Uncomplete{% else %}Complete{% endif %}
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
 </body>
 </html>
