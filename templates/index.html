@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToDo App</title>
+    <title>DOTO</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,12 +14,10 @@
             border-collapse: collapse;
             margin-top: 20px;
         }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
         th, td {
-            padding: 12px;
+            border: 1px solid #dddddd;
             text-align: left;
+            padding: 8px;
         }
         th {
             background-color: #f2f2f2;
@@ -30,10 +28,10 @@
     </style>
 </head>
 <body>
-    <h1>ToDo App</h1>
+    <h1>DOTO</h1>
 
-    <!-- Form for Adding Tasks -->
-    <form action="/add" method="POST">
+    <!-- Form for Adding Task -->
+    <form action="{{ url_for('add') }}" method="POST">
         <label for="content">Add Task:</label>
         <input type="text" id="content" name="content" required>
         <button type="submit">Add</button>
@@ -41,29 +39,25 @@
 
     <!-- Task List Table -->
     <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Task</th>
-                <th>Date Created</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Loop through tasks and display them in the table -->
-            {% for task in tasks %}
-                <tr>
-                    <td>{{ task.id }}</td>
-                    <td>{{ task.content }}</td>
-                    <td>{{ task.date_local.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                    <!-- Edit and Delete links for each task -->
-                    <td>
-                        <a href="/edit/{{ task.id }}">Edit</a> |
-                        <a href="/delete/{{ task.id }}">Delete</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
+        <tr>
+            <th>ID</th>
+            <th>Content</th>
+            <th>Date Created</th>
+            <th>Last Updated</th>
+            <th>Actions</th>
+        </tr>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ task.id }}</td>
+            <td>{{ task.content }}</td>
+            <td>{{ task.date_local.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td>{{ task.last_updated_local.strftime('%Y-%m-%d %H:%M:%S') if task.last_updated_local else '' }}</td>
+            <td>
+                <a href="{{ url_for('edit', task_id=task.id) }}">Edit</a>
+                <a href="{{ url_for('delete', task_id=task.id) }}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
     </table>
 </body>
 </html>

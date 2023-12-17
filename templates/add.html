@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Task</title>
+    <title>Add Task</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,13 +15,13 @@
     </style>
 </head>
 <body>
-    <h1>Edit Task</h1>
+    <h1>Add Task</h1>
 
-    <!-- Form for Editing Task -->
-    <form action="{{ url_for('edit', task_id=task.id) }}" method="POST">
-        <label for="content">Edit Task:</label>
-        <input type="text" id="content" name="content" value="{{ task.content }}" required>
-        <button type="submit">Save Changes</button>
+    <!-- Form for Adding Task -->
+    <form action="{{ url_for('add') }}" method="POST">
+        <label for="content">New Task:</label>
+        <input type="text" id="content" name="content" required>
+        <button type="submit">Add Task</button>
     </form>
 
     <a href="{{ url_for('index') }}">Back to Tasks</a>

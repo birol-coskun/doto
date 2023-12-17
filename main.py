@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime, timezone, timedelta
+import pytz
 
 app = Flask(__name__)
 
@@ -8,6 +9,7 @@ class Task:
         self.id = id
         self.content = content
         self.date_created = date_created
+        self.last_updated = None  # Yeni eklenen özellik
 
 # Örnek bir görev listesi
 tasks = [
@@ -20,32 +22,32 @@ def index():
     # Her bir görevin UTC'den yerel saate dönüştürülmesi
     for task in tasks:
         task.date_local = task.date_created.astimezone(timezone(timedelta(hours=3)))  # GMT+3 için
+        task.last_updated_local = task.last_updated.astimezone(timezone(timedelta(hours=3))) if task.last_updated else None
 
     return render_template('index.html', tasks=tasks)
 
-@app.route('/add', methods=['POST'])
+@app.route('/add', methods=['GET', 'POST'])
 def add():
-    content = request.form.get('content')
-    new_task = Task(id=len(tasks) + 1, content=content, date_created=datetime.utcnow())
-    tasks.append(new_task)
-    return redirect(url_for('index'))
+    if request.method == 'POST':
+        content = request.form.get('content')
+        new_task = Task(id=len(tasks) + 1, content=content, date_created=datetime.utcnow().replace(tzinfo=pytz.utc))
+        tasks.append(new_task)
+        return redirect(url_for('index'))
+    else:
+        # GET isteği için boş bir form göster
+        return render_template('add.html')
 
-@app.route('/edit/<int:task_id>')
+@app.route('/edit/<int:task_id>', methods=['GET', 'POST'])
 def edit(task_id):
     task = next((task for task in tasks if task.id == task_id), None)
     if task:
-        task.date_local = task.date_created.astimezone(timezone(timedelta(hours=3)))  # GMT+3 için
-        return render_template('edit.html', task=task)
-    else:
-        return 'Task not found', 404
-
-@app.route('/update/<int:task_id>', methods=['POST'])
-def update(task_id):
-    task = next((task for task in tasks if task.id == task_id), None)
-    if task:
-        task.content = request.form.get('content')
-        task.date_created = datetime.utcnow()
-        return redirect(url_for('index'))
+        if request.method == 'POST':
+            task.content = request.form.get('content')
+            task.last_updated = datetime.utcnow().replace(tzinfo=pytz.utc)
+            return redirect(url_for('index'))
+        else:
+            task.date_local = task.date_created.astimezone(timezone(timedelta(hours=3)))  # GMT+3 için
+            return render_template('edit.html', task=task)
     else:
         return 'Task not found', 404
 
