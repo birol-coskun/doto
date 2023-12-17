@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Task</title>
+    <title>Add Task - DOTO</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,6 +11,14 @@
         }
         form {
             margin-top: 20px;
+        }
+        label, input {
+            margin-bottom: 10px;
+            display: block;
+        }
+        button {
+            padding: 8px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -21,9 +29,10 @@
     <form action="{{ url_for('add') }}" method="POST">
         <label for="content">New Task:</label>
         <input type="text" id="content" name="content" required>
-        <button type="submit">Add Task</button>
+        <button type="submit">Add</button>
     </form>
 
-    <a href="{{ url_for('index') }}">Back to Tasks</a>
+    <!-- Navigation Link -->
+    <p><a href="{{ url_for('index') }}">Back to Task List</a></p>
 </body>
 </html>

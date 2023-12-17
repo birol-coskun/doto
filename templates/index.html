@@ -25,51 +25,62 @@
         form {
             margin-top: 20px;
         }
-        h1 {
-            color: #007bff;
+        .completed {
+            background-color: #c7ffcf; /* Yeşil arka plan rengi */
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+        .uncompleted {
+            background-color: #ffc7c7; /* Kırmızı arka plan rengi */
         }
-        .btn {
-            margin-right: 5px;
+        .button {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .complete-button {
+            background-color: #4caf50; /* Yeşil buton rengi */
+            color: white;
+        }
+        .uncomplete-button {
+            background-color: #f44336; /* Kırmızı buton rengi */
+            color: white;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>DOTO</h1>
+    <h1>DOTO</h1>
 
-        <!-- Form for Adding Task -->
-        <form action="{{ url_for('add') }}" method="POST">
-            <label for="content">Add Task:</label>
-            <input type="text" id="content" name="content" required>
-            <button type="submit" class="btn">Add</button>
-        </form>
+    <!-- Form for Adding Task -->
+    <form action="{{ url_for('add') }}" method="POST">
+        <label for="content">Add Task:</label>
+        <input type="text" id="content" name="content" required>
+        <button type="submit">Add</button>
+    </form>
 
-        <!-- Task List Table -->
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Content</th>
-                <th>Date Created</th>
-                <th>Last Updated</th>
-                <th>Actions</th>
-            </tr>
-            {% for task in tasks %}
-            <tr>
-                <td>{{ task.id }}</td>
-                <td>{{ task.content }}</td>
-                <td>{{ task.date_local.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                <td>{{ task.last_updated_local.strftime('%Y-%m-%d %H:%M:%S') if task.last_updated_local else '' }}</td>
-                <td>
-                    <a href="{{ url_for('edit', task_id=task.id) }}" class="btn">Edit</a>
-                    <a href="{{ url_for('delete', task_id=task.id) }}" class="btn">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
+    <!-- Task List Table -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Content</th>
+            <th>Date Created</th>
+            <th>Last Updated</th>
+            <th>Actions</th>
+        </tr>
+        {% for task in tasks %}
+        <tr {% if task.completed %}class="completed"{% else %}class="uncompleted"{% endif %}>
+            <td>{{ task.id }}</td>
+            <td>{{ task.content }}</td>
+            <td>{{ task.date_local.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td>{{ task.last_updated_local.strftime('%Y-%m-%d %H:%M:%S') if task.last_updated_local else '' }}</td>
+            <td>
+                {% if not task.completed %}
+                <a href="{{ url_for('edit', task_id=task.id) }}" class="button">Edit</a>
+                {% endif %}
+                <a href="{{ url_for('delete', task_id=task.id) }}" class="button">Delete</a>
+                <a href="{{ url_for('complete', task_id=task.id) }}" class="button {% if task.completed %}uncomplete-button{% else %}complete-button{% endif %}">
+                    {% if task.completed %}Uncomplete{% else %}Complete{% endif %}
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
 </body>
 </html>
