@@ -9,19 +9,16 @@ class Task:
         self.id = id
         self.content = content
         self.date_created = date_created
-        self.last_updated = None  # Yeni eklenen özellik
+        self.last_updated = None
 
-# Örnek bir görev listesi
 tasks = [
     Task(1, "Task 1", datetime(2023, 12, 17, 17, 0, 0, tzinfo=timezone.utc)),
-    # Diğer görevler...
 ]
 
 @app.route('/')
 def index():
-    # Her bir görevin UTC'den yerel saate dönüştürülmesi
     for task in tasks:
-        task.date_local = task.date_created.astimezone(timezone(timedelta(hours=3)))  # GMT+3 için
+        task.date_local = task.date_created.astimezone(timezone(timedelta(hours=3)))
         task.last_updated_local = task.last_updated.astimezone(timezone(timedelta(hours=3))) if task.last_updated else None
 
     return render_template('index.html', tasks=tasks)
@@ -34,7 +31,6 @@ def add():
         tasks.append(new_task)
         return redirect(url_for('index'))
     else:
-        # GET isteği için boş bir form göster
         return render_template('add.html')
 
 @app.route('/edit/<int:task_id>', methods=['GET', 'POST'])
@@ -46,8 +42,18 @@ def edit(task_id):
             task.last_updated = datetime.utcnow().replace(tzinfo=pytz.utc)
             return redirect(url_for('index'))
         else:
-            task.date_local = task.date_created.astimezone(timezone(timedelta(hours=3)))  # GMT+3 için
             return render_template('edit.html', task=task)
+    else:
+        return 'Task not found', 404
+
+# 'update' endpoint'i ekleniyor
+@app.route('/update/<int:task_id>', methods=['POST'])
+def update(task_id):
+    task = next((task for task in tasks if task.id == task_id), None)
+    if task:
+        task.content = request.form.get('content')
+        task.last_updated = datetime.utcnow().replace(tzinfo=pytz.utc)
+        return redirect(url_for('index'))
     else:
         return 'Task not found', 404
 

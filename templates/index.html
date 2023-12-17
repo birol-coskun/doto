@@ -25,39 +25,51 @@
         form {
             margin-top: 20px;
         }
+        h1 {
+            color: #007bff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .btn {
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
-    <h1>DOTO</h1>
+    <div class="container">
+        <h1>DOTO</h1>
 
-    <!-- Form for Adding Task -->
-    <form action="{{ url_for('add') }}" method="POST">
-        <label for="content">Add Task:</label>
-        <input type="text" id="content" name="content" required>
-        <button type="submit">Add</button>
-    </form>
+        <!-- Form for Adding Task -->
+        <form action="{{ url_for('add') }}" method="POST">
+            <label for="content">Add Task:</label>
+            <input type="text" id="content" name="content" required>
+            <button type="submit" class="btn">Add</button>
+        </form>
 
-    <!-- Task List Table -->
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Content</th>
-            <th>Date Created</th>
-            <th>Last Updated</th>
-            <th>Actions</th>
-        </tr>
-        {% for task in tasks %}
-        <tr>
-            <td>{{ task.id }}</td>
-            <td>{{ task.content }}</td>
-            <td>{{ task.date_local.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-            <td>{{ task.last_updated_local.strftime('%Y-%m-%d %H:%M:%S') if task.last_updated_local else '' }}</td>
-            <td>
-                <a href="{{ url_for('edit', task_id=task.id) }}">Edit</a>
-                <a href="{{ url_for('delete', task_id=task.id) }}">Delete</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+        <!-- Task List Table -->
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Content</th>
+                <th>Date Created</th>
+                <th>Last Updated</th>
+                <th>Actions</th>
+            </tr>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.id }}</td>
+                <td>{{ task.content }}</td>
+                <td>{{ task.date_local.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ task.last_updated_local.strftime('%Y-%m-%d %H:%M:%S') if task.last_updated_local else '' }}</td>
+                <td>
+                    <a href="{{ url_for('edit', task_id=task.id) }}" class="btn">Edit</a>
+                    <a href="{{ url_for('delete', task_id=task.id) }}" class="btn">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 </body>
 </html>

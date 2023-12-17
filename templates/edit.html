@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Task</title>
+    <title>Edit Task - DOTO</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,18 +12,26 @@
         form {
             margin-top: 20px;
         }
+        label, input {
+            margin-bottom: 10px;
+            display: block;
+        }
+        button {
+            padding: 8px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <h1>Edit Task</h1>
 
     <!-- Form for Editing Task -->
-    <form action="{{ url_for('edit', task_id=task.id) }}" method="POST">
+    <form action="{{ url_for('update', task_id=task.id) }}" method="POST">
         <label for="content">Edit Task:</label>
         <input type="text" id="content" name="content" value="{{ task.content }}" required>
-        <button type="submit">Save Changes</button>
+        <button type="submit">Update</button>
     </form>
-
-    <a href="{{ url_for('index') }}">Back to Tasks</a>
+    
+    <p><a href="{{ url_for('index') }}">Back to Task List</a></p>
 </body>
 </html>
